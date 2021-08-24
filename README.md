@@ -1,7 +1,5 @@
 # excelgrep (eg)
 
-[![go:1.15](https://img.shields.io/badge/GO-1.15-blue?style=flat-square&logo=go)](https://github.com/golang/go)
-
 excelgrep は指定のディレクトリから再帰的に excel ファイル（.xlsx） を見つけ出し、文字列パターンを検索するツールです。  
 簡単に言えば以下のようなコマンドを実行できます。
 
@@ -10,27 +8,26 @@ find /some/path -type f -name "*.xlsx" -not -name "~\$*.xlsx" | grep "some word"
 ```
 
 残念ながら現在は find コマンドや grep コマンドと同等のオプションがあるわけではありません。  
-[今後のロードマップはこちら。](https://github.com/momiom/excelgrep/projects/1#column-12615916)
-
 
 ## DEMO
 
-
+WIP
 ## Usage
 
+WIP
 
 ## Install
 
-excelgrep のバイナリ名は eg です。[こちらから Windows、macOS 向けのコンパイル済みバイナリをダウンロードできます。](https://github.com/momiom/excelgrep/releases)
+[こちらから Windows、macOS 向けのコンパイル済みバイナリをダウンロードできます。](https://github.com/momiom/excelgrep/releases)
 
+excelgrep のバイナリ名は eg です。
 インストーラーはありません。必要に応じて任意の場所でパスを通してください。
 
 ## Build
-excelgrep は Go 1.15 で実装されているためビルドには同様の実行環境が必要です。
 
 ```
 $ go version
-go version go1.15.5 windows/amd64
+go version go1.16.6 darwin/amd64
 
 $ git clone https://github.com/momiom/excelgrep.git
 $ cd excelgrep
