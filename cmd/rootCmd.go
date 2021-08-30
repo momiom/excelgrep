@@ -82,15 +82,7 @@ func runRootCmd(cmd *cobra.Command, args []string) {
 			}
 
 			// 結果表示
-			if len(res.Sheets) > 0 {
-				cmd.Printf("%s\n", res.BookName)
-				for _, s := range res.Sheets {
-					cmd.Printf("\t%s\n", s.SheetName)
-					for _, f := range s.Founds {
-						cmd.Printf("\t\t%s : %s\n", f.CellName, f.Found)
-					}
-				}
-			}
+			cmd.Println(res.ToString())
 			logger.Debugln("print result done")
 
 			// 空データを取り出してバッファを空ける
