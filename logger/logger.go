@@ -55,18 +55,13 @@ func (vl *verboseLogger) Debugln(v ...interface{}) {
 }
 
 func (vl *verboseLogger) Debugf(format string, v ...interface{}) {
-	f := format
-
-	// 現在のスタックから情報を取得
-	file, line, ok := getColler()
-	if ok {
-		s := getLogStyle(file, line)
-		f = fmt.Sprintf("%s %s", s, format)
+	f := fmt.Sprintf(format, v...)
+	if file, line, ok := getColler(); ok {
+		ls := getLogStyle(file, line)
+		f = fmt.Sprintf("%s %s", ls, f)
 	}
 
 	log.Println(f)
-
-	log.Printf(f, v...)
 }
 
 // 現在のスタックから情報を取得する
@@ -90,9 +85,9 @@ func getLogStyle(file string, line int) string {
 }
 
 func Debugln(v ...interface{}) {
-	loggerInstance.Debugln(v)
+	loggerInstance.Debugln(v...)
 }
 
 func Debugf(format string, v ...interface{}) {
-	loggerInstance.Debugf(format, v)
+	loggerInstance.Debugf(format, v...)
 }
