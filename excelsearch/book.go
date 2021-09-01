@@ -1,6 +1,9 @@
 package excelsearch
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 /*
 [
@@ -79,4 +82,12 @@ func (b Book) ToString() string {
 	}
 
 	return str
+}
+
+func (b Book) ToJson() (string, error) {
+	s, err := json.Marshal(b)
+	if err != nil {
+		return "", err
+	}
+	return string(s), nil
 }
