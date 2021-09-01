@@ -14,13 +14,19 @@ func TestFind(t *testing.T) {
 		wantErr string
 	}{
 		{
-			name:    "case 1",
+			name:    "存在しないパスを指定したとき、空の配列が返されること",
 			args:    "../fakepath/",
 			want:    []string{},
 			wantErr: "",
 		},
 		{
-			name: "case 2",
+			name:    "xlsxファイルを指定したとき、指定ファイル１つが入った配列が返されること",
+			args:    "../testdata/sample_files/sample.xlsx",
+			want:    []string{"../testdata/sample_files/sample.xlsx/"},
+			wantErr: "",
+		},
+		{
+			name: "ディレクトリで終わるパスを指定したとき、指定ディレクトリ以下の全ての*.xlsxファイルが返されること",
 			args: "../testdata/",
 			want: []string{
 				"../testdata/sample_files/sample.xlsx",
@@ -31,7 +37,7 @@ func TestFind(t *testing.T) {
 			wantErr: "",
 		},
 		{
-			name: "case 3",
+			name: "**をパスに指定したとき、指定ディレクトリ以下の全ての*.xlsxファイルが返されること",
 			args: "../testdata/**",
 			want: []string{
 				"../testdata/sample_files/sample.xlsx",

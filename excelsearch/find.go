@@ -17,9 +17,8 @@ func Find(path string) ([]string, error) {
 		err error
 	)
 
-	// パスが渡されたときの処理
-	// 末尾に *.xlsx がなければを結合して Glob
-	// パスが渡されなかった場合はカレントディレクトリ配下を再帰的に検索
+	// パスが渡された場合、末尾に *.xlsx がなければを結合して再起的に Glob
+	// パスが渡されなかった場合、カレントディレクトリ配下を再帰的に Glob
 	if len(path) > 0 {
 		if !strings.HasSuffix(path, ".xlsx") {
 			path = pathutil.Join(path, "/**/*.xlsx")

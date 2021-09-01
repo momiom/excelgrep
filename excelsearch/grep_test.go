@@ -28,20 +28,20 @@ func TestGrep(t *testing.T) {
 		{
 			"case 1",
 			args{"../testdata/sample_files/sample.xlsx", "abc"},
-			`{"book_name":"../testdata/sample_files/sample.xlsx","sheets":[{"sheet_name":"Sheet1","Founds":[{"cell_name":"A1","found":"\u001b[31;1mabc\u001b[0m\n"}]}]}`,
+			`{"book_name":"../testdata/sample_files/sample.xlsx","sheets":[{"sheet_name":"Sheet1","Founds":[{"cell_name":"A1","found":"abc\n"}]},{"sheet_name":"しーとに","Founds":[]}]}`,
 			"",
 		},
 		{
 			"case 2",
 			args{"../testdata/sample_files/sample2.xlsx", "abc"},
-			`{"book_name":"../testdata/sample_files/sample2.xlsx","sheets":[{"sheet_name":"Sheet1","Founds":[{"cell_name":"A1","found":"\u001b[31;1mabc\u001b[0m\n"}]},{"sheet_name":"しーとに","Founds":[{"cell_name":"C1","found":"\u001b[31;1mabc\u001b[0m\n"}]}]}`,
+			`{"book_name":"../testdata/sample_files/sample2.xlsx","sheets":[{"sheet_name":"Sheet1","Founds":[{"cell_name":"A1","found":"abc\n"}]},{"sheet_name":"しーとに","Founds":[{"cell_name":"C1","found":"abc\n"}]}]}`,
 			"",
 		},
 		{
 			"case 3",
-			args{"../testdata/no_such_dir/sample.xlsx", "abc"},
-			``,
-			"open ../testdata/no_such_dir/sample.xlsx: no such file or directory",
+			args{"../testdata/not_exists_dir/sample.xlsx", "abc"},
+			"",
+			"open ../testdata/not_exists_dir/sample.xlsx: no such file or directory",
 		},
 	}
 	for _, tt := range tests {
@@ -49,19 +49,17 @@ func TestGrep(t *testing.T) {
 			got, err := Grep(tt.args.xlsxPath, tt.args.sep)
 			if err != nil {
 				if err.Error() != tt.wantErr {
-					t.Errorf("Grep() error = %v, wantErr %v", err.Error(), tt.wantErr)
+					t.Errorf("Grep() error = %+v, wantErr %+v", err.Error(), tt.wantErr)
 				}
 				return
 			}
 
-			j, err := json.Marshal(got)
-			if err != nil {
-				t.Errorf("Failed marshal. error = %v", err)
-			}
-			gotJson := string(j)
+			g, _ := json.Marshal(got)
+			// w, _ := json.Marshal(tt.want)
 
-			if gotJson != tt.want {
-				t.Errorf("Grep() = %v, want %v", gotJson, tt.want)
+			if string(g) != tt.want {
+				// t.Errorf("\ngot = %+v \nwant = %+v", got, tt.want)
+				t.Errorf("\ngot = %s \nwant = %s", string(g), tt.want)
 			}
 		})
 	}
