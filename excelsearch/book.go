@@ -67,8 +67,6 @@ func (b *Book) AppendFound(cellName string, foundWord string) {
 func (b Book) ToString() string {
 	var str string
 	if len(b.Sheets) > 0 {
-		str = fmt.Sprintf("%s\n", b.BookName)
-
 		for _, s := range b.Sheets {
 			if len(s.Founds) <= 0 {
 				continue
@@ -79,6 +77,10 @@ func (b Book) ToString() string {
 				str = fmt.Sprintf("%s\t\t%s : %s\n", str, f.CellName, f.Found)
 			}
 		}
+	}
+
+	if len(str) > 0 {
+		str = fmt.Sprintf("%s\n%s", b.BookName, str)
 	}
 
 	return str
