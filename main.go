@@ -16,9 +16,20 @@ limitations under the License.
 package main
 
 import (
+	// "runtime/trace"
+
 	"github.com/momiom/excelgrep/cmd"
 )
 
 func main() {
+	// traceFile, err := os.Create("trace_proc_8.out")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer traceFile.Close()
+
+	// trace.Start(traceFile)
+	// defer trace.Stop()
+
 	cmd.Execute()
 }

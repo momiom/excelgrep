@@ -21,7 +21,7 @@ const (
 	Silent
 )
 
-// ロガーを取得する
+// ロガーを設定する
 func SetLogger(lt logType) {
 	switch lt {
 	case Verbose:
