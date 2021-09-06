@@ -24,6 +24,7 @@ import (
 )
 
 var useVerboseLogger bool
+var maxGoroutine int
 
 var Version = "unknown"
 var Revision = "unknown"
@@ -40,8 +41,9 @@ USAGE:
 		command | eg [OPTIONS] PATTERN
 
 ARGS:
-    <PATTERN>    A glob pattern used for searching.
-		<PATH>...    A file or directory to search.`,
+	<PATTERN>	A glob pattern used for searching.
+	<PATH>	A file or directory to search.
+`,
 		Args: cobra.MinimumNArgs(1),
 		Run:  runRootCmd,
 	}
@@ -63,7 +65,10 @@ ARGS:
 	)
 
 	// ロガー設定
-	rootCmd.PersistentFlags().BoolVar(&useVerboseLogger, "verbose", false, "Verbose log enable flag")
+	rootCmd.PersistentFlags().BoolVar(&useVerboseLogger, "verbose", false, "Enable verbose log")
+
+	// grep の並列処理数
+	rootCmd.PersistentFlags().IntVarP(&maxGoroutine, "max-procs", "p", 10, "Run up to specified processes at a time")
 
 	// バージョン表示フラグ
 	rootCmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "Show version")

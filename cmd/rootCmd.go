@@ -19,17 +19,6 @@ import (
 // find 処理
 // grep 処理
 func runRootCmd(cmd *cobra.Command, args []string) {
-
-	// traceFile, err := os.Create("trace_proc2.out")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// defer traceFile.Close()
-
-	// trace.Start(traceFile)
-	// defer trace.Stop()
-
 	// 引数パターン
 	// ---- ↓↓↓↓コマンド引数 ----
 	// eg word /any/path
@@ -60,11 +49,14 @@ func runRootCmd(cmd *cobra.Command, args []string) {
 
 	// grep
 	logger.Debugln("grep part START")
-	wg := new(sync.WaitGroup)
-	wg.Add(len(finds))
 
 	// goroutine の上限を管理する channel
-	sem := make(chan struct{}, 1)
+	sem := make(chan struct{}, maxGoroutine)
+	defer close(sem)
+
+	var wg sync.WaitGroup
+	wg.Add(len(finds))
+
 	for i, f := range finds {
 		logger.Debugf("Loop %d: file: %s", i, f)
 
@@ -72,7 +64,13 @@ func runRootCmd(cmd *cobra.Command, args []string) {
 		sem <- struct{}{}
 		go func(f string) {
 			logger.Debugln("go func START")
-			defer wg.Done()
+
+			defer func() {
+				// 空データを取り出してバッファを空ける
+				<-sem
+				wg.Done()
+				logger.Debugln("go func END")
+			}()
 
 			// grep 処理
 			res, err := excelsearch.Grep(f, pattern)
@@ -82,14 +80,13 @@ func runRootCmd(cmd *cobra.Command, args []string) {
 			}
 
 			// 結果表示
-			cmd.Println(res.ToString())
+			cmd.Print(res.ToString())
 			logger.Debugln("print result done")
 
-			// 空データを取り出してバッファを空ける
-			<-sem
-			logger.Debugln("go func END")
 		}(f)
 	}
+
+	wg.Wait()
 }
 
 func getArgs(args []string) (string, []string, error) {
@@ -103,7 +100,7 @@ func getArgs(args []string) (string, []string, error) {
 		// 検索パスの指定がない場合は . （カレントディレクトリ）とする
 		switch len(args) {
 		case 0:
-			return "", nil, fmt.Errorf("Invalid args.")
+			return "", nil, fmt.Errorf("invalid args")
 		case 1:
 			pattern = args[0]
 			paths = append(paths, ".")
@@ -117,7 +114,7 @@ func getArgs(args []string) (string, []string, error) {
 		pattern = args[0]
 		b, err := ioutil.ReadAll(os.Stdin)
 		if err != nil {
-			return "", nil, fmt.Errorf("Failed to read stdin.")
+			return "", nil, fmt.Errorf("failed to read stdin")
 		}
 		in := strings.Split(string(b), "\n")
 		in = in[:len(in)-1] // 最後の改行で空の要素が入ってしまうため削除
