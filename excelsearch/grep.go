@@ -30,7 +30,7 @@ func Grep(xlsxPath string, sep string) (Book, error) {
 	// 各シート毎に全セルを検索
 	for _, sheetName := range f.GetSheetList() {
 		// シートの全セルを取得
-		cols, err := f.GetCols(sheetName)
+		rows, err := f.GetRows(sheetName)
 		if err != nil {
 			logger.Debugln(err)
 			continue
@@ -39,16 +39,16 @@ func Grep(xlsxPath string, sep string) (Book, error) {
 		result.AppendSheet(sheetName)
 
 		// 文字列検索
-		for colNum, col := range cols {
-			for rowNum, rowCell := range col {
-				if len(rowCell) != 0 {
+		for rowNum, row := range rows {
+			for colNum, colCell := range row {
+				if len(colCell) != 0 {
 					cellName, err := excelize.CoordinatesToCellName(colNum+1, rowNum+1)
 					if err != nil {
 						logger.Debugln(err)
 						continue
 					}
 
-					if s := strings.TrimSpace(rowCell); s != "" {
+					if s := strings.TrimSpace(colCell); s != "" {
 						foundWord := search(s, sep)
 						if foundWord != "" {
 							result.AppendFound(cellName, foundWord)
