@@ -48,7 +48,7 @@ go version go1.16.6 darwin/amd64
 
 $ git clone https://github.com/momiom/excelgrep.git
 $ cd excelgrep
-$ go mod tify
+$ go mod tidy
 $ go build -ldflags "-s -w" -o eg
 $ ./eg --version
 version: unknown
